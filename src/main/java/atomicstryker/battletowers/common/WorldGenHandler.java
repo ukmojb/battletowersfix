@@ -1,17 +1,6 @@
 package atomicstryker.battletowers.common;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -24,6 +13,12 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.IWorldGenerator;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class WorldGenHandler implements IWorldGenerator
 {
@@ -496,7 +491,7 @@ public class WorldGenHandler implements IWorldGenerator
 
         if (chosen != null)
         {
-            instance.generator.generate(world, world.rand, chosen.x, chosen.y, chosen.z, AS_WorldGenTower.TowerTypes.Null.ordinal(), chosen.underground);
+            instance.generator.generate(world, world.rand, chosen.x, chosen.y, chosen.z, 0, chosen.underground);
             obtainTowerPosListAccess(worldHandle);
             worldHandle.towerPositions.remove(chosen);
             releaseTowerPosListAccess(worldHandle);
@@ -521,7 +516,7 @@ public class WorldGenHandler implements IWorldGenerator
         obtainTowerPosListAccess(wh);
         for (TowerPosition tp : wh.towerPositions)
         {
-            instance.generator.generate(world, world.rand, tp.x, tp.y, tp.z, regenerate ? tp.type : AS_WorldGenTower.TowerTypes.Null.ordinal(), tp.underground);
+            instance.generator.generate(world, world.rand, tp.x, tp.y, tp.z, regenerate ? tp.type : 0, tp.underground);
         }
 
         if (!regenerate)

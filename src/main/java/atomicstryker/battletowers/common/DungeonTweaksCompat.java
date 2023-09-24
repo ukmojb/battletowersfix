@@ -1,9 +1,5 @@
 package atomicstryker.battletowers.common;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.util.Random;
-
 import atomicstryker.battletowers.common.AS_WorldGenTower.TowerTypes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMobSpawner;
@@ -13,6 +9,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.Event;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.Random;
 
 /**
  * this is backwards and modern dungeon tweaks compatible

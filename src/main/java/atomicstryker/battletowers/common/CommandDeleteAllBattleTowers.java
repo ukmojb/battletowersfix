@@ -1,9 +1,8 @@
 package atomicstryker.battletowers.common;
 
-import org.apache.logging.log4j.Level;
-
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import org.apache.logging.log4j.Level;
 
 public class CommandDeleteAllBattleTowers extends CommandBattleTowers
 {

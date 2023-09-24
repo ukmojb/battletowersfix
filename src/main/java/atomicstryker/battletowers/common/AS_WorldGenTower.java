@@ -1,10 +1,7 @@
 package atomicstryker.battletowers.common;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+
+
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTorch;
@@ -21,6 +18,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+
+import javax.annotation.Nullable;
+import java.util.*;
 
 public class AS_WorldGenTower
 {
@@ -46,7 +47,7 @@ public class AS_WorldGenTower
      * @return -1 when no tower should be able to spawn, else Towerchosen enum
      *         ordinal
      */
-    public int getChosenTowerOrdinal(World world, Random random, int ix, int jy, int kz)
+    public int getChosenTowerOrdinal(World world,  Random random, int ix, int jy, int kz)
     {
         TowerTypes towerChosen;
         int countWater = 0;
@@ -146,14 +147,55 @@ public class AS_WorldGenTower
             }
         }
 
-        return towerChosen.ordinal();
+//        TowerTypes.Towernum.put(TowerTypes.Null, 0);
+//        TowerTypes.Towernum.put(TowerTypes.CobbleStone, 1);
+//        TowerTypes.Towernum.put(TowerTypes.CobbleStoneMossy, 2);
+//        TowerTypes.Towernum.put(TowerTypes.Ice, 3);
+//        TowerTypes.Towernum.put(TowerTypes.SmoothStone, 4);
+//        TowerTypes.Towernum.put(TowerTypes.Netherrack, 5);
+//        TowerTypes.Towernum.put(TowerTypes.Jungle, 6);
+//        TowerTypes.Towernum.put(TowerTypes.SandStone, 7);
+//
+//        int nnum = 0;
+//
+//        for (String Towerstr : Config.TowerDimension){
+//            nnum++;
+//            String[] strlist = Towerstr.split(",");
+//            AS_WorldGenTower.TowerTypes CtowerTypes = new AS_WorldGenTower.TowerTypes(strlist[6], Block.getBlockFromName(strlist[1]), Block.getBlockFromName(strlist[2]), Block.getBlockFromName(strlist[3]), Integer.parseInt(strlist[4]), Block.getBlockFromName(strlist[5]));
+//            AS_WorldGenTower.TowerTypes.Towernum.put(CtowerTypes, nnum + 7);
+//        }
+
+
+        return TowerTypes.Towernum.get(towerChosen);
     }
 
     @SuppressWarnings("deprecation") // is needed because getDefaultState on
                                      // stairs does not work
     public void generate(World world, Random random, int ix, int jy, int kz, int towerchoice, boolean underground)
     {
-        TowerTypes towerChosen = TowerTypes.values()[towerchoice];
+        TowerTypes towerChosen = TowerTypes.Null;
+
+        for (TowerTypes towerTypes : TowerTypes.Towernum.keySet()){
+            if (TowerTypes.Towernum.get(towerTypes) == towerchoice){
+                towerChosen = towerTypes;
+            }
+        }
+
+        for (String Towerstr : Config.TowerDimension){
+            String[] strlist = Towerstr.split(",");
+            if (world.provider.getDimension() == Integer.parseInt(strlist[0])){
+                AS_WorldGenTower.TowerTypes CtowerTypes = new AS_WorldGenTower.TowerTypes(strlist[6], Block.getBlockFromName(strlist[1]), Block.getBlockFromName(strlist[2]), Block.getBlockFromName(strlist[3]), Integer.parseInt(strlist[4]), Block.getBlockFromName(strlist[5]));
+                towerChosen = CtowerTypes;
+            }
+        }
+
+        for (String Towerstr0 : Config.TowerBiome){
+            String[] strlist = Towerstr0.split(",");
+            if (Biome.getIdForBiome(world.getBiome(new BlockPos(ix, jy, kz))) == Integer.parseInt(strlist[0])){
+                AS_WorldGenTower.TowerTypes CtowerTypes = new AS_WorldGenTower.TowerTypes(strlist[6], Block.getBlockFromName(strlist[1]), Block.getBlockFromName(strlist[2]), Block.getBlockFromName(strlist[3]), Integer.parseInt(strlist[4]), Block.getBlockFromName(strlist[5]));
+                towerChosen = CtowerTypes;
+            }
+        }
 
         Block towerWallBlockID = towerChosen.getWallBlockID();
         Block towerLightBlockID = towerChosen.getLightBlockID();
@@ -397,7 +439,23 @@ public class AS_WorldGenTower
             {
                 if (towerChosen != TowerTypes.Null)
                 {
-                    AS_EntityGolem entitygolem = new AS_EntityGolem(world, towerChosen.ordinal());
+                    TowerTypes.Towernum.put(TowerTypes.Null, 0);
+                    TowerTypes.Towernum.put(TowerTypes.CobbleStone, 1);
+                    TowerTypes.Towernum.put(TowerTypes.CobbleStoneMossy, 2);
+                    TowerTypes.Towernum.put(TowerTypes.Ice, 3);
+                    TowerTypes.Towernum.put(TowerTypes.SmoothStone, 4);
+                    TowerTypes.Towernum.put(TowerTypes.Netherrack, 5);
+                    TowerTypes.Towernum.put(TowerTypes.Jungle, 6);
+
+                    int num = 0;
+
+                    for (TowerTypes towerTypes : TowerTypes.Towernum.keySet()){
+                        if (towerChosen == towerTypes){
+                            break;
+                        }
+                        num++;
+                    }
+                    AS_EntityGolem entitygolem = new AS_EntityGolem(world, num);
                     entitygolem.setLocationAndAngles(ix + 0.5D, builderHeight + 6, kz + 0.5D, world.rand.nextFloat() * 360F, 0.0F);
                     world.spawnEntity(entitygolem);
                 }
@@ -512,7 +570,9 @@ public class AS_WorldGenTower
 
             if (towerChosen != TowerTypes.Null)
             {
-                for (int l3 = 0; l3 < (floor * 4 + towerChosen.ordinal()) - 8 && !topFloor; l3++) // random
+                int num = world.rand.nextInt(6);
+                if (TowerTypes.Towernum.get(towerChosen) != null) num = TowerTypes.Towernum.get(towerChosen);
+                for (int l3 = 0; l3 < (floor * 4 + num) - 8 && !topFloor; l3++) // random
                                                                                                   // hole
                                                                                                   // poker
                 {
@@ -623,21 +683,10 @@ public class AS_WorldGenTower
         }
     }
 
-    public enum TowerTypes
+    public static class TowerTypes
     {
-        Null("null", Blocks.AIR, Blocks.AIR, Blocks.AIR, 0, Blocks.AIR),
-        CobbleStone("cobblestone", Blocks.COBBLESTONE, Blocks.TORCH, Blocks.DOUBLE_STONE_SLAB, 0, Blocks.STONE_STAIRS),
-        CobbleStoneMossy("cobblestonemossy", Blocks.MOSSY_COBBLESTONE, Blocks.TORCH, Blocks.DOUBLE_STONE_SLAB, 0, Blocks.STONE_STAIRS),
-        SandStone("sandstone", Blocks.SANDSTONE, Blocks.TORCH, Blocks.DOUBLE_STONE_SLAB, 1, Blocks.SANDSTONE_STAIRS),
-        Ice("ice", Blocks.ICE, Blocks.AIR /* Blocks.GLOWSTONE */, Blocks.CLAY, 2, Blocks.OAK_STAIRS), // since
-                                                                                                      // when
-                                                                                                      // does
-                                                                                                      // glowstone
-                                                                                                      // melt
-                                                                                                      // ice
-        SmoothStone("smoothstone", Blocks.STONE, Blocks.TORCH, Blocks.DOUBLE_STONE_SLAB, 3, Blocks.STONE_STAIRS),
-        Netherrack("netherrack", Blocks.NETHERRACK, Blocks.GLOWSTONE, Blocks.SOUL_SAND, 0, Blocks.NETHER_BRICK_STAIRS),
-        Jungle("jungle", Blocks.MOSSY_COBBLESTONE, Blocks.WEB, Blocks.DIRT, 0, Blocks.JUNGLE_STAIRS);
+
+
 
         private Block wallBlockID;
         private Block lightBlockID;
@@ -646,7 +695,17 @@ public class AS_WorldGenTower
         private Block stairBlockID;
         private String typeName;
 
-        TowerTypes(String t, Block a, Block b, Block c, int d, Block e)
+
+        public static final TowerTypes Null = new  TowerTypes("null", Blocks.AIR, Blocks.AIR, Blocks.AIR, 0, Blocks.AIR);
+        public static final TowerTypes CobbleStone = new  TowerTypes("cobblestone", Blocks.COBBLESTONE, Blocks.TORCH, Blocks.DOUBLE_STONE_SLAB, 0, Blocks.STONE_STAIRS);
+        public static final TowerTypes CobbleStoneMossy = new  TowerTypes("cobblestonemossy", Blocks.MOSSY_COBBLESTONE, Blocks.TORCH, Blocks.DOUBLE_STONE_SLAB, 0, Blocks.STONE_STAIRS);
+        public static final TowerTypes Ice = new  TowerTypes("ice", Blocks.ICE, Blocks.AIR /* Blocks.GLOWSTONE */, Blocks.CLAY, 2, Blocks.OAK_STAIRS);
+        public static final TowerTypes SmoothStone = new  TowerTypes("smoothstone", Blocks.STONE, Blocks.TORCH, Blocks.DOUBLE_STONE_SLAB, 3, Blocks.STONE_STAIRS);
+        public static final TowerTypes Netherrack = new  TowerTypes("netherrack", Blocks.NETHERRACK, Blocks.GLOWSTONE, Blocks.SOUL_SAND, 0, Blocks.NETHER_BRICK_STAIRS);
+        public static final TowerTypes Jungle = new  TowerTypes("jungle", Blocks.MOSSY_COBBLESTONE, Blocks.WEB, Blocks.DIRT, 0, Blocks.JUNGLE_STAIRS);
+        public static final TowerTypes SandStone = new TowerTypes("sandstone", Blocks.SANDSTONE, Blocks.TORCH, Blocks.DOUBLE_STONE_SLAB, 1, Blocks.SANDSTONE_STAIRS);
+
+        public TowerTypes(String t, Block a, Block b, Block c, int d, Block e)
         {
             this.wallBlockID = a;
             this.lightBlockID = b;
@@ -690,6 +749,39 @@ public class AS_WorldGenTower
         {
             return new ResourceLocation("battletowers:" + this.typeName);
         }
-    }
 
+        public static Map<TowerTypes, Integer> Towernum = new HashMap<TowerTypes, Integer>();
+
+
+        public static List<TowerTypes> values(){
+
+            Towernum.put(Null, 0);
+            Towernum.put(CobbleStone, 1);
+            Towernum.put(CobbleStoneMossy, 2);
+            Towernum.put(Ice, 3);
+            Towernum.put(SmoothStone, 4);
+            Towernum.put(Netherrack, 5);
+            Towernum.put(Jungle, 6);
+
+
+            List<TowerTypes> towerTypesList = new ArrayList<>();
+            towerTypesList.add(Null);
+            towerTypesList.add(CobbleStone);
+            towerTypesList.add(CobbleStoneMossy);
+            towerTypesList.add(Ice);
+            towerTypesList.add(SmoothStone);
+            towerTypesList.add(Netherrack);
+            towerTypesList.add(Jungle);
+            int num = 0;
+
+            for (String Towerstr : Config.TowerDimension){
+                num++;
+                String[] strlist = Towerstr.split(",");
+                TowerTypes CtowerTypes = new TowerTypes(strlist[6], Block.getBlockFromName(strlist[1]), Block.getBlockFromName(strlist[2]), Block.getBlockFromName(strlist[3]), Integer.parseInt(strlist[4]), Block.getBlockFromName(strlist[5]));
+                Towernum.put(CtowerTypes, num + 6);
+                towerTypesList.add(CtowerTypes);
+            }
+            return towerTypesList;
+        }
+    }
 }

@@ -1,13 +1,9 @@
 package atomicstryker.battletowers.common;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.logging.log4j.Logger;
-
 import atomicstryker.battletowers.common.network.ChestAttackedPacket;
 import atomicstryker.battletowers.common.network.LoginPacket;
 import atomicstryker.battletowers.common.network.NetworkHelper;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.util.ResourceLocation;
@@ -21,11 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
@@ -33,6 +25,11 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
+import org.apache.logging.log4j.Logger;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @ObjectHolder("battletowers")
 @Mod(modid = "battletowers", name = "Battle Towers", version = "1.6.5")
@@ -93,6 +90,7 @@ public class AS_BattleTowersCore
     	DungeonTweaksCompat.registerDungeons();
     	
         configuration = new Configuration(event.getSuggestedConfigurationFile(), false);
+        Config.init(event.getSuggestedConfigurationFile());
         loadForgeConfig();
 
         proxy.preInit();
@@ -103,6 +101,33 @@ public class AS_BattleTowersCore
         MinecraftForge.EVENT_BUS.register(new ServerTickHandler());
         
         LOGGER = event.getModLog();
+
+        AS_WorldGenTower.TowerTypes.Towernum.put(AS_WorldGenTower.TowerTypes.Null, 0);
+        AS_WorldGenTower.TowerTypes.Towernum.put(AS_WorldGenTower.TowerTypes.CobbleStone, 1);
+        AS_WorldGenTower.TowerTypes.Towernum.put(AS_WorldGenTower.TowerTypes.CobbleStoneMossy, 2);
+        AS_WorldGenTower.TowerTypes.Towernum.put(AS_WorldGenTower.TowerTypes.Ice, 3);
+        AS_WorldGenTower.TowerTypes.Towernum.put(AS_WorldGenTower.TowerTypes.SmoothStone, 4);
+        AS_WorldGenTower.TowerTypes.Towernum.put(AS_WorldGenTower.TowerTypes.Netherrack, 5);
+        AS_WorldGenTower.TowerTypes.Towernum.put(AS_WorldGenTower.TowerTypes.Jungle, 6);
+        AS_WorldGenTower.TowerTypes.Towernum.put(AS_WorldGenTower.TowerTypes.SandStone, 7);
+        int num = 0;
+
+        for (String Towerstr : Config.TowerDimension){
+            num++;
+            String[] strlist = Towerstr.split(",");
+            AS_WorldGenTower.TowerTypes CtowerTypes = new AS_WorldGenTower.TowerTypes(strlist[6], Block.getBlockFromName(strlist[1]), Block.getBlockFromName(strlist[2]), Block.getBlockFromName(strlist[3]), Integer.parseInt(strlist[4]), Block.getBlockFromName(strlist[5]));
+            AS_WorldGenTower.TowerTypes.Towernum.put(CtowerTypes, num + 7);
+        }
+
+        int nnum = AS_WorldGenTower.TowerTypes.Towernum.size();
+
+        for (String Towerstr : Config.TowerBiome){
+            nnum++;
+            String[] strlist = Towerstr.split(",");
+            AS_WorldGenTower.TowerTypes CtowerTypes = new AS_WorldGenTower.TowerTypes(strlist[6], Block.getBlockFromName(strlist[1]), Block.getBlockFromName(strlist[2]), Block.getBlockFromName(strlist[3]), Integer.parseInt(strlist[4]), Block.getBlockFromName(strlist[5]));
+            AS_WorldGenTower.TowerTypes.Towernum.put(CtowerTypes, nnum);
+        }
+
     }
 
     @SubscribeEvent

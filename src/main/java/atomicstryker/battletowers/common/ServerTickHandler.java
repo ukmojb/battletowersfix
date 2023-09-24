@@ -1,9 +1,9 @@
 package atomicstryker.battletowers.common;
 
-import java.util.Iterator;
-
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+
+import java.util.Iterator;
 
 public class ServerTickHandler
 {

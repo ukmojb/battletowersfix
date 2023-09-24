@@ -1,7 +1,5 @@
 package atomicstryker.battletowers.client;
 
-import java.util.List;
-
 import atomicstryker.battletowers.common.AS_BattleTowersCore;
 import atomicstryker.battletowers.common.AS_EntityGolem;
 import atomicstryker.battletowers.common.network.ChestAttackedPacket;
@@ -17,6 +15,8 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+
+import java.util.List;
 
 public class ClientTickHandler
 {
