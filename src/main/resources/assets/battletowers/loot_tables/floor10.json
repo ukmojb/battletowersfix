@@ -1,0 +1,101 @@
+
+{
+  "pools": [
+    {
+      "name" : "floor10",
+      "rolls": 2,
+      "bonus_rolls": 1,
+      "entries": [
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.5
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:ender_pearl",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 2,
+                  "max": 2
+                }
+
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.7
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:diamond",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 2,
+                  "max": 2
+                }
+
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.75
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:redstone",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 5,
+                  "max": 5
+                }
+
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.9
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:gold_ingot",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 8,
+                  "max": 8
+                }
+
+            }
+          ]
+        },
+        {
+          "type": "loot_table",
+          "name": "ChestGenHook:chests/simple_dungeon:7",
+          "weight": 100
+        }
+      ]
+    }
+  ]
+}

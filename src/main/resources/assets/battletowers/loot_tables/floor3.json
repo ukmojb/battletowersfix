@@ -1,0 +1,95 @@
+{
+  "pools": [
+    {
+      "name" : "floor3",
+      "rolls": 2,
+      "bonus_rolls": 1,
+      "entries": [
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.75
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:bowl",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 2,
+                  "max": 4
+                }
+
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.90
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:coal",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 4,
+                  "max": 4
+                }
+
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.8
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:string",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 5,
+                  "max": 5
+                }
+
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.75
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:wool",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 2,
+                  "max": 2
+                }
+
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

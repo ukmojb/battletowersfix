@@ -147,16 +147,16 @@ public class WorldGenHandler implements IWorldGenerator
 
     private boolean getIsBiomeAllowed(Biome target)
     {
-        if (biomesMap.containsKey(target.getRegistryName().getResourcePath()))
+        if (biomesMap.containsKey(target.getRegistryName().getPath()))
         {
-            return biomesMap.get(target.getRegistryName().getResourcePath());
+            return biomesMap.get(target.getRegistryName().getPath());
         }
 
         Configuration config = AS_BattleTowersCore.instance.configuration;
         config.load();
-        boolean result = config.get("BiomeSpawnAllowed", target.getRegistryName().getResourcePath(), true).getBoolean(true);
+        boolean result = config.get("BiomeSpawnAllowed", target.getRegistryName().getPath(), true).getBoolean(true);
         config.save();
-        biomesMap.put(target.getRegistryName().getResourcePath(), result);
+        biomesMap.put(target.getRegistryName().getPath(), result);
         return result;
     }
 
@@ -289,7 +289,9 @@ public class WorldGenHandler implements IWorldGenerator
             return null;
         }
 
-        if (AS_BattleTowersCore.instance.minDistanceBetweenTowers > 0)
+        int dimID = world.provider.getDimension();
+
+        if (Config.getDimDistance(dimID) > 0)
         {
             double mindist = 9999f;
             obtainTowerPosListAccess(worldHandle);
@@ -299,7 +301,7 @@ public class WorldGenHandler implements IWorldGenerator
                 int diffZ = temp.z - zActual;
                 double dist = Math.sqrt(diffX * diffX + diffZ * diffZ);
                 mindist = Math.min(mindist, dist);
-                if (dist < AS_BattleTowersCore.instance.minDistanceBetweenTowers)
+                if (dist < Config.getDimDistance(dimID))
                 {
                     // System.out.printf("refusing site coords [%d,%d], mindist
                     // %f\n", xActual, zActual, mindist);

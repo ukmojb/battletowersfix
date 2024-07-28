@@ -19,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.chunk.Chunk;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -27,6 +28,7 @@ public class AS_WorldGenTower
 {
 
     public String failState;
+
 
     private static int candidates[][] = { { 4, -5 }, { 4, 0 }, { 4, 5, }, { 0, -5 }, { 0, 0 }, { 0, 5, }, { -4, -5 }, { -4, 0, }, { -4, 5 } };
 
@@ -193,9 +195,11 @@ public class AS_WorldGenTower
             String[] strlist = Towerstr0.split(",");
             if (Biome.getIdForBiome(world.getBiome(new BlockPos(ix, jy, kz))) == Integer.parseInt(strlist[0])){
                 AS_WorldGenTower.TowerTypes CtowerTypes = new AS_WorldGenTower.TowerTypes(strlist[6], Block.getBlockFromName(strlist[1]), Block.getBlockFromName(strlist[2]), Block.getBlockFromName(strlist[3]), Integer.parseInt(strlist[4]), Block.getBlockFromName(strlist[5]));
+//                AS_WorldGenTower.TowerTypes CtowerTypes = new AS_WorldGenTower.TowerTypes(strlist[6], Block.getBlockFromName(strlist[1]), Block.getBlockFromName(strlist[2]), Block.getBlockFromName(strlist[3]), Integer.parseInt(strlist[4]), Block.getBlockFromName(strlist[5]));
                 towerChosen = CtowerTypes;
             }
         }
+
 
         Block towerWallBlockID = towerChosen.getWallBlockID();
         Block towerLightBlockID = towerChosen.getLightBlockID();
@@ -526,19 +530,25 @@ public class AS_WorldGenTower
                     TileEntityChest tileentitychest = (TileEntityChest) world.getTileEntity(new BlockPos(ix - chestlength, builderHeight + 7, kz + 3));
                     if (tileentitychest != null)
                     {
-                        int count = underground ? AS_BattleTowersCore.instance.itemGenerateAttemptsPerFloor * 2 : AS_BattleTowersCore.instance.itemGenerateAttemptsPerFloor;
-                        List<ItemStack> generatedStacks = floorChestManager.getStageItemStacks(world, world.rand, tileentitychest, count);
-                        List<Integer> freeSlots = new ArrayList<>(tileentitychest.getSizeInventory());
-                        for (int i = 0; i < tileentitychest.getSizeInventory(); i++)
-                        {
-                            freeSlots.add(i);
-                        }
-                        Iterator<ItemStack> iterator = generatedStacks.iterator();
-                        while (iterator.hasNext() && !freeSlots.isEmpty())
-                        {
-                            Integer slot = freeSlots.get(world.rand.nextInt(freeSlots.size()));
-                            freeSlots.remove(slot);
-                            tileentitychest.setInventorySlotContents(slot, iterator.next());
+                        if (!Config.hasloottable) {
+                            int count = underground ? AS_BattleTowersCore.instance.itemGenerateAttemptsPerFloor * 2 : AS_BattleTowersCore.instance.itemGenerateAttemptsPerFloor;
+                            List<ItemStack> generatedStacks = floorChestManager.getStageItemStacks(world, world.rand, tileentitychest, count);
+                            List<Integer> freeSlots = new ArrayList<>(tileentitychest.getSizeInventory());
+                            for (int i = 0; i < tileentitychest.getSizeInventory(); i++) {
+                                freeSlots.add(i);
+                            }
+                            Iterator<ItemStack> iterator = generatedStacks.iterator();
+                            while (iterator.hasNext() && !freeSlots.isEmpty()) {
+                                Integer slot = freeSlots.get(world.rand.nextInt(freeSlots.size()));
+                                freeSlots.remove(slot);
+                                tileentitychest.setInventorySlotContents(slot, iterator.next());
+                            }
+                        } else {
+                            if (!topFloor) {
+                                tileentitychest.setLootTable(new ResourceLocation("battletowers", "floor" + floor), world.rand.nextLong());
+                            } else {
+                                tileentitychest.setLootTable(new ResourceLocation("battletowers", "floor10"), world.rand.nextLong());
+                            }
                         }
                     }
                 }

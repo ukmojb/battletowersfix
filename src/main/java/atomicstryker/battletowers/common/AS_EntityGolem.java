@@ -266,7 +266,7 @@ public class AS_EntityGolem extends EntityMob implements IEntityAdditionalSpawnD
                     }
                     else
                     {
-                        world.createExplosion(this, posX, posY - 0.3D, posZ, 4F, true);
+                        world.createExplosion(this, posX, posY - 0.3D, posZ, 4F, Config.explosion);
                     }
                 }
                 rageCounter = 125;

@@ -9,12 +9,12 @@ import net.minecraft.network.play.server.SPacketChat;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
@@ -28,7 +28,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import org.apache.logging.log4j.Logger;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @ObjectHolder("battletowers")
@@ -38,7 +37,6 @@ public class AS_BattleTowersCore
 
     private Set<AS_TowerDestroyer> towerDestroyers;
     public int minDistanceFromSpawn;
-    public int minDistanceBetweenTowers;
     public int towerDestroyerEnabled;
     public int itemGenerateAttemptsPerFloor;
     public int chanceTowerIsUnderGround;
@@ -83,7 +81,7 @@ public class AS_BattleTowersCore
     @ObjectHolder("golemdeath")
     public static final SoundEvent soundGolemDeath = createSoundEvent("golemdeath");
 
-    @EventHandler
+    @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
     	DungeonTweaksCompat.legacyCheck();
@@ -98,9 +96,20 @@ public class AS_BattleTowersCore
         networkHelper = new NetworkHelper("AS_BT", LoginPacket.class, ChestAttackedPacket.class);
 
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new ServerTickHandler());
+        MinecraftForge.EVENT_BUS.register(new EventHandler());
         
         LOGGER = event.getModLog();
+
+        LootTableList.register(new ResourceLocation("battletowers", "floor1"));
+        LootTableList.register(new ResourceLocation("battletowers", "floor2"));
+        LootTableList.register(new ResourceLocation("battletowers", "floor3"));
+        LootTableList.register(new ResourceLocation("battletowers", "floor4"));
+        LootTableList.register(new ResourceLocation("battletowers", "floor5"));
+        LootTableList.register(new ResourceLocation("battletowers", "floor6"));
+        LootTableList.register(new ResourceLocation("battletowers", "floor7"));
+        LootTableList.register(new ResourceLocation("battletowers", "floor8"));
+        LootTableList.register(new ResourceLocation("battletowers", "floor9"));
+        LootTableList.register(new ResourceLocation("battletowers", "floor10"));
 
         AS_WorldGenTower.TowerTypes.Towernum.put(AS_WorldGenTower.TowerTypes.Null, 0);
         AS_WorldGenTower.TowerTypes.Towernum.put(AS_WorldGenTower.TowerTypes.CobbleStone, 1);
@@ -150,7 +159,7 @@ public class AS_BattleTowersCore
         networkHelper.sendPacketToPlayer(new LoginPacket(), (EntityPlayerMP) event.player);
     }
 
-    @EventHandler
+    @Mod.EventHandler
     public void load(FMLInitializationEvent evt)
     {
         proxy.load();
@@ -189,7 +198,7 @@ public class AS_BattleTowersCore
         }
     }
 
-    @EventHandler
+    @Mod.EventHandler
     public void modsLoaded(FMLPostInitializationEvent evt)
     {
         configuration.load();
@@ -266,7 +275,7 @@ public class AS_BattleTowersCore
         configuration.save();
     }
 
-    @EventHandler
+    @Mod.EventHandler
     public void serverStarted(FMLServerStartingEvent evt)
     {
         evt.registerServerCommand(new CommandSpawnBattleTower());
@@ -276,7 +285,7 @@ public class AS_BattleTowersCore
         evt.registerServerCommand(new CommandDeleteAllBattleTowers());
     }
     
-    @EventHandler
+    @Mod.EventHandler
     public void serverStopped(FMLServerStoppedEvent evt)
     {
     	//Wipe world handles to avoid save folder conflicts
@@ -287,7 +296,6 @@ public class AS_BattleTowersCore
     {
         configuration.load();
         minDistanceFromSpawn = configuration.get("MainOptions", "Minimum Distance of Battletowers from Spawn", 96).getInt();
-        minDistanceBetweenTowers = Integer.parseInt(configuration.get("MainOptions", "Minimum Distance between 2 BattleTowers", 196).getString());
         towerDestroyerEnabled = Integer.parseInt(configuration.get("MainOptions", "Tower Destroying Enabled", 1).getString());
         itemGenerateAttemptsPerFloor = configuration.get("BattleTowerChestItems", "Item Generations per Floor", "7").getInt();
         chanceTowerIsUnderGround = configuration.get("MainOptions", "chanceTowerIsUnderGround", 15).getInt();

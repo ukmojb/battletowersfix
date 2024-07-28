@@ -1,0 +1,96 @@
+
+{
+  "pools": [
+    {
+      "name" : "floor4",
+      "rolls": 2,
+      "bonus_rolls": 1,
+      "entries": [
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.75
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:glass",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 3,
+                  "max": 3
+                }
+
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.75
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:feather",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 4,
+                  "max": 4
+                }
+
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.75
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:bread",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 2,
+                  "max": 2
+                }
+
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.75
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:apple",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 2,
+                  "max": 2
+                }
+
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

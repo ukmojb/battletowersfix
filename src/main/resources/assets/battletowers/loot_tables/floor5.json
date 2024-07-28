@@ -1,0 +1,96 @@
+
+{
+  "pools": [
+    {
+      "name" : "floor5",
+      "rolls": 2,
+      "bonus_rolls": 1,
+      "entries": [
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.75
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:brown_mushroom",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 2,
+                  "max": 2
+                }
+
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.75
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:red_mushroom",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 2,
+                  "max": 2
+                }
+
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.90
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:sapling",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 3,
+                  "max": 3
+                }
+
+            }
+          ]
+        },
+        {
+          "conditions": [
+            {
+              "condition": "random_chance",
+              "chance": 0.75
+            }
+          ],
+          "type": "item",
+          "name": "minecraft:wheat",
+          "functions": [
+            {
+              "function": "set_count",
+              "count":
+                {
+                  "min": 4,
+                  "max": 4
+                }
+
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
