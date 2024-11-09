@@ -92,7 +92,7 @@
         },
         {
           "type": "loot_table",
-          "name": "ChestGenHook:chests/simple_dungeon:7",
+          "name": "minecraft:chests/simple_dungeon",
           "weight": 100
         }
       ]

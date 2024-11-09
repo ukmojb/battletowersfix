@@ -39,7 +39,7 @@ public class Config  {
 
         try {
             config.load();
-            config.addCustomCategoryComment("Tower", "TowerDimension\nThe composition of blocks when a tower is generated in a particular dimension\n[dimensionID,wallBlockID,lightBlockID,floorBlockID,floorBlockMetaData,stairBlockID,typeName]\nTowerBiome\nThe composition of blocks when a tower is generated in a particular Biome\n[biomeID,wallBlockID,lightBlockID,floorBlockID,floorBlockMetaData,stairBlockID,typeName]\ndimMinDistanceBetweenTowers\nThe minimum distance between two towers in different dimensions(* means any dimension)\n[dimensionID:minDistance]");
+            config.addCustomCategoryComment("Tower", "TowerDimension\nThe composition of blocks when a tower is generated in a particular dimension\n[dimensionID,wallBlockID,lightBlockID,floorBlockID,floorBlockMetaData,stairBlockID,typeName]\nTowerBiome\nThe composition of blocks when a tower is generated in a particular Biome\n[biomeID,wallBlockID,lightBlockID,floorBlockID,floorBlockMetaData,stairBlockID,typeName]\ndimMinDistanceBetweenTowers\nThe minimum distance between two towers in different dimensions(* means any dimension)\nConfigurations with * should be at the bottom, for example:\n1:256\n*:128\n[dimensionID:minDistance]");
             config.addCustomCategoryComment("more_config", "explosion-Whether the resulting explosion damaged the terrain");
             TowerDimension = config.get(CATEGORY_Tower, "TowerDimension", TowerDimension, "").getStringList();
             TowerBiome = config.get(CATEGORY_Tower, "TowerBiome", TowerBiome, "").getStringList();
@@ -55,14 +55,20 @@ public class Config  {
 
     public static int getDimDistance(int dimid) {
         Map<Integer, Integer> distanceMap = new HashMap<>();
+        int dnum = 0;
         for (String s : dimMinDistanceBetweenTowers) {
             String[] strings = s.split(":");
             if (strings[0].contains("*")) {
-                return 1;
+                dnum = Integer.valueOf(strings[1]);
+            } else {
+                distanceMap.put(Integer.valueOf(strings[0]), Integer.valueOf(strings[1]));
             }
-            distanceMap.put(Integer.valueOf(strings[0]),  Integer.valueOf(strings[1]));
         }
-        return distanceMap.get(dimid);
+        if (distanceMap.get(dimid) == null) {
+            return dnum;
+        } else {
+            return distanceMap.get(dimid);
+        }
     }
 
 }
